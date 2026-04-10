@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: 'postgres:latest'
+    environment:
+      - 'POSTGRES_DB=musiclass'
+      - 'POSTGRES_PASSWORD=mypassword'
+      - 'POSTGRES_USER=postgres'
+    ports:
+      - '5432:5432'
+  pgadmin:
+    image: 'dpage/pgadmin4:latest'
+    environment:
+      - 'PGADMIN_DEFAULT_EMAIL=thiagolabreu.br@gmail.com'
+      - 'PGADMIN_DEFAULT_PASSWORD=admin'
+    ports:
+      - '5433:80'
