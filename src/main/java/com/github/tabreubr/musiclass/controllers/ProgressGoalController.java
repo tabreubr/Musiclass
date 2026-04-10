@@ -1,0 +1,45 @@
+package com.github.tabreubr.musiclass.controllers;
+
+import com.github.tabreubr.musiclass.entities.ProgressGoal;
+import com.github.tabreubr.musiclass.services.ProgressGoalService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RequestMapping("/progress-goals")
+@RestController
+public class ProgressGoalController {
+
+	private final ProgressGoalService progressGoalService;
+
+	public ProgressGoalController(ProgressGoalService progressGoalService) {
+		this.progressGoalService = progressGoalService;
+	}
+
+	@PostMapping
+	public ResponseEntity<?> saveProgressGoal(@RequestBody @Valid ProgressGoal progressGoal) {
+		return ResponseEntity.status(HttpStatus.CREATED).body(progressGoalService.save(progressGoal));
+	}
+
+	@GetMapping
+	public ResponseEntity<?> findAllProgressGoals() {
+		return ResponseEntity.status(HttpStatus.OK).body(progressGoalService.findAllProgressGoals());
+	}
+
+	@GetMapping("/{id}")
+	public ResponseEntity<?> findProgressGoalById(@PathVariable Long id) {
+		return ResponseEntity.status(HttpStatus.OK).body(progressGoalService.findById(id));
+	}
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateProgressGoal(@PathVariable Long id, @RequestBody @Valid ProgressGoal progressGoal) {
+        return ResponseEntity.status(HttpStatus.OK).body(progressGoalService.updateProgressGoalById(id, progressGoal));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteProgressGoal(@PathVariable Long id) {
+        progressGoalService.deleteProgressGoalById(id);
+        return ResponseEntity.noContent().build();
+    }
+}
