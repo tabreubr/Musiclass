@@ -1,5 +1,6 @@
 package com.github.tabreubr.musiclass.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -15,8 +16,13 @@ public class Lesson {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull
-    private Integer number;
     @ManyToOne
-    private Method method;
+    @JsonIgnoreProperties("lessons")
+    private Classes classes;
+    @ManyToOne
+    private Method methodName;
+
+    private Integer page;
+    private Integer lessonNumber;
+    private Boolean completed = false;
 }

@@ -1,5 +1,6 @@
 package com.github.tabreubr.musiclass.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -19,7 +20,10 @@ public class Student {
     @NotBlank
     private String name;
     @ManyToOne
+    private Instrument instrument;
+    @ManyToOne
     private Instructor instructor;
-    @OneToMany(mappedBy = "student")
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("student")
     private List<Classes> classes;
 }
