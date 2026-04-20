@@ -2,10 +2,11 @@ package com.github.tabreubr.musiclass.controllers;
 
 import com.github.tabreubr.musiclass.entities.ProgressGoal;
 import com.github.tabreubr.musiclass.services.ProgressGoalService;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RequestMapping("/progress-goals")
 @RestController
@@ -18,8 +19,8 @@ public class ProgressGoalController {
 	}
 
 	@PostMapping
-	public ResponseEntity<?> saveProgressGoal(@RequestBody @Valid ProgressGoal progressGoal) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(progressGoalService.save(progressGoal));
+	public ResponseEntity<?> saveProgressGoal(@RequestBody Map<String, Object> body) {
+		return ResponseEntity.status(HttpStatus.CREATED).body(progressGoalService.saveFromBody(body));
 	}
 
 	@GetMapping
@@ -33,7 +34,7 @@ public class ProgressGoalController {
 	}
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateProgressGoal(@PathVariable Long id, @RequestBody @Valid ProgressGoal progressGoal) {
+    public ResponseEntity<?> updateProgressGoal(@PathVariable Long id, @RequestBody ProgressGoal progressGoal) {
         return ResponseEntity.status(HttpStatus.OK).body(progressGoalService.updateProgressGoalById(id, progressGoal));
     }
 

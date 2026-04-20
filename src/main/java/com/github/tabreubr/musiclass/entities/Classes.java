@@ -24,7 +24,7 @@ public class Classes {
     private Long id;
     @NotNull
     @Future
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime date;
     private String observations;
     private Boolean passed;
@@ -35,4 +35,5 @@ public class Classes {
     private List<Lesson> lessons = new ArrayList<>();
     @ManyToOne
     private Instructor instructor;
+    private Boolean deleted = false;
 }

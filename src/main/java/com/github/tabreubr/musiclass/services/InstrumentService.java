@@ -1,6 +1,7 @@
 package com.github.tabreubr.musiclass.services;
 
 import com.github.tabreubr.musiclass.entities.Instrument;
+import com.github.tabreubr.musiclass.exceptions.ResourceNotFoundException;
 import com.github.tabreubr.musiclass.repositories.InstrumentRepository;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,8 @@ public class InstrumentService {
     }
 
     public Instrument findById(Long id) {
-        return instrumentRepository.findById(id).orElseThrow(() -> new RuntimeException("Instrument not found with id: " + id));
+        return instrumentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Instrument not found with id: " + id));
     }
 
     public List<Instrument> findAllInstruments() {

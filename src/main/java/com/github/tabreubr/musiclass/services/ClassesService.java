@@ -28,14 +28,18 @@ public class ClassesService {
         return classRepository.findAll();
     }
 
-    public Classes updateById(Long id, Classes classes) {
-        findById(id);
-        classes.setId(id);
-        return classRepository.save(classes);
+    public Classes updateById(Long id, Classes updatedData) {
+        Classes existing = findById(id);
+        if (updatedData.getPassed() != null)
+            existing.setPassed(updatedData.getPassed());
+        if(updatedData.getObservations() != null)
+            existing.setObservations(updatedData.getObservations());
+        return classRepository.save(existing);
     }
 
     public void deleteById(Long id) {
-        findById(id);
-        classRepository.deleteById(id);
+        Classes existing = findById(id);
+        existing.setDeleted(true);
+        classRepository.save(existing);
     }
 }

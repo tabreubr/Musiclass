@@ -16,7 +16,7 @@ public class ClassesController {
 
     private final ClassesService classesService;
     private final LessonService lessonService;
-    
+
     public ClassesController(ClassesService classesService,
                              LessonService lessonService) {
         this.classesService = classesService;
@@ -39,7 +39,7 @@ public class ClassesController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateClass(@PathVariable Long id, @RequestBody @Valid Classes classes) {
+    public ResponseEntity<?> updateClass(@PathVariable Long id, @RequestBody Classes classes) {
         return ResponseEntity.status(HttpStatus.OK).body(classesService.updateById(id, classes));
     }
 

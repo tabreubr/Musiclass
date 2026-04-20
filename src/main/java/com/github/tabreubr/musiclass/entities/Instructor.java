@@ -1,9 +1,7 @@
 package com.github.tabreubr.musiclass.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.github.tabreubr.musiclass.enums.UserRole;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,4 +17,9 @@ public class Instructor {
     private Long id;
     @NotBlank
     private String name;
+    @Column(nullable = true)
+    private String password;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private UserRole role = UserRole.INSTRUCTOR;
 }

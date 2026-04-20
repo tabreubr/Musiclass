@@ -21,7 +21,7 @@ public class ProgressGoal {
     @Future
     private LocalDate deadline;
     @NotNull
-    private Integer TargetLessonNumber;
+    private Integer targetLessonNumber;
     @ManyToOne
     private Student student;
     @ManyToOne
