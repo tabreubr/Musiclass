@@ -18,6 +18,8 @@ public class Instructor {
     @NotBlank
     private String name;
     @Column(nullable = true)
+    private String email;
+    @Column(nullable = true)
     private String password;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

@@ -1,5 +1,6 @@
 package com.github.tabreubr.musiclass.services;
 
+import com.github.tabreubr.musiclass.controllers.AuthController;
 import com.github.tabreubr.musiclass.entities.Instructor;
 import com.github.tabreubr.musiclass.exceptions.ResourceNotFoundException;
 import com.github.tabreubr.musiclass.repositories.InstructorRepository;
@@ -22,6 +23,9 @@ public class InstructorService {
 
     public Instructor findById(Long id) {
         return instructorRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Instructor not found with id: " + id));
+    }
+    public Instructor findByEmail(String email) {
+        return instructorRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("Instructor not found with email: " + email));
     }
 
     public List<Instructor> findAllInstructors() {

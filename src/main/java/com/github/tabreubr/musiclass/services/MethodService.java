@@ -24,6 +24,10 @@ public class MethodService {
         return methodRepository.findById(id).orElseThrow(() -> new RuntimeException("Method not found with id: " + id));
     }
 
+    public Method findByName(String name) {
+        return methodRepository.findByName(name).orElseThrow(() -> new RuntimeException("Method not found with name: " + name));
+    }
+
     public List<Method> findAllMethods() {
         return methodRepository.findAll();
     }

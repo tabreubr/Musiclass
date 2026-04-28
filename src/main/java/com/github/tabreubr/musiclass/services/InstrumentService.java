@@ -25,6 +25,10 @@ public class InstrumentService {
                 .orElseThrow(() -> new ResourceNotFoundException("Instrument not found with id: " + id));
     }
 
+    public Instrument findByName(String name) {
+        return instrumentRepository.findByName(name).orElseThrow(() -> new ResourceNotFoundException("Instrument not found with name: " + name));
+    }
+
     public List<Instrument> findAllInstruments() {
         return instrumentRepository.findAll();
     }

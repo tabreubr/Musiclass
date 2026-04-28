@@ -10,7 +10,7 @@ spring:
         format_sql: true
   sql:
     init:
-      mode: always
+      mode: never
 jwt:
   secret: musiclass-super-secret-key-2024-change-this-in-production
-  expirantion: 86400000
+  expiration: 86400000
