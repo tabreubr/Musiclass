@@ -1,4 +1,4 @@
-package com.github.tabreubr.musiclass.config;
+package com.github.tabreubr.musiclass.infra.config;
 
 import com.github.tabreubr.musiclass.entities.Instructor;
 import com.github.tabreubr.musiclass.entities.Instrument;

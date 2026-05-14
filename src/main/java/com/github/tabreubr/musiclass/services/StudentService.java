@@ -70,6 +70,10 @@ public class StudentService {
         studentRepository.deleteById(id);
     }
 
+    public Student saveEntity(Student student) {
+        return studentRepository.save(student);
+    }
+
     public Student findEntityById(Long id) {
         return studentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Student with id: " + id));

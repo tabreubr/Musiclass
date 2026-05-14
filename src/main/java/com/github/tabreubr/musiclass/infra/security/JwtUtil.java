@@ -1,4 +1,4 @@
-package com.github.tabreubr.musiclass.security;
+package com.github.tabreubr.musiclass.infra.security;
 
 import com.github.tabreubr.musiclass.entities.Instructor;
 import io.jsonwebtoken.Claims;

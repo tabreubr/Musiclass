@@ -1,4 +1,4 @@
-package com.github.tabreubr.musiclass.security;
+package com.github.tabreubr.musiclass.infra.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

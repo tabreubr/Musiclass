@@ -1,4 +1,4 @@
-package com.github.tabreubr.musiclass.config;
+package com.github.tabreubr.musiclass.infra.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
