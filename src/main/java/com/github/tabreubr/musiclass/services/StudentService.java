@@ -1,5 +1,9 @@
 package com.github.tabreubr.musiclass.services;
 
+import com.github.tabreubr.musiclass.dto.student.StudentRequest;
+import com.github.tabreubr.musiclass.dto.student.StudentResponse;
+import com.github.tabreubr.musiclass.entities.Instructor;
+import com.github.tabreubr.musiclass.entities.Instrument;
 import com.github.tabreubr.musiclass.entities.Student;
 import com.github.tabreubr.musiclass.exceptions.ResourceNotFoundException;
 import com.github.tabreubr.musiclass.repositories.StudentRepository;
@@ -11,32 +15,64 @@ import java.util.List;
 public class StudentService {
 
     private final StudentRepository studentRepository;
+    private final InstructorService instructorService;
+    private final InstrumentService instrumentService;
 
-    public StudentService(StudentRepository studentRepository) {
+    public StudentService(StudentRepository studentRepository,
+                          InstructorService instructorService,
+                          InstrumentService instrumentService) {
         this.studentRepository = studentRepository;
+        this.instructorService = instructorService;
+        this.instrumentService = instrumentService;
     }
 
-    public Student save(Student student) {
-        return studentRepository.save(student);
+    public StudentResponse save(StudentRequest request) {
+        Instructor instructor = instructorService.findEntityById(request.instructorId());
+        Instrument instrument = instrumentService.findById(request.instrumentId());
+
+        Student student = new Student();
+        student.setName(request.name());
+        student.setInstructor(instructor);
+        student.setInstrument(instrument);
+
+        return StudentResponse.from(studentRepository.save(student));
     }
 
-    public Student findById(Long id) {
-        return studentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Student not found with id: " + id));
+    public StudentResponse findById(Long id) {
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Student with id: " + id));
+        return StudentResponse.from(student);
     }
 
-    public List<Student> findAllStudents() {
-        return studentRepository.findAll();
+    public List<StudentResponse> findAllStudents() {
+        return studentRepository.findAll()
+                .stream()
+                .map(StudentResponse::from)
+                .toList();
     }
 
-    public Student updateById(Long id, Student student) {
+    public StudentResponse updateById(Long id, StudentRequest request) {
         findById(id);
-        student.setId(id);
-        return studentRepository.save(student);
+
+        Instructor instructor = instructorService.findEntityById(request.instructorId());
+        Instrument instrument = instrumentService.findById(request.instrumentId());
+
+        Student student = new Student();
+        student.setName(request.name());
+        student.setInstructor(instructor);
+        student.setInstrument(instrument);
+
+        return StudentResponse.from(studentRepository.save(student));
     }
 
     public void deleteStudentById(Long id) {
         findById(id);
         studentRepository.deleteById(id);
+    }
+
+    public Student findEntityById(Long id) {
+        return studentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Student with id: " + id));
     }
 
 

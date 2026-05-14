@@ -23,7 +23,6 @@ public class Classes {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotNull
-    @Future
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime date;
     private String observations;

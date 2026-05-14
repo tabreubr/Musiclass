@@ -1,11 +1,15 @@
 package com.github.tabreubr.musiclass.controllers;
 
+import com.github.tabreubr.musiclass.dto.student.StudentRequest;
+import com.github.tabreubr.musiclass.dto.student.StudentResponse;
 import com.github.tabreubr.musiclass.entities.Student;
 import com.github.tabreubr.musiclass.services.StudentService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequestMapping("/students")
 @RestController
@@ -18,27 +22,27 @@ public class StudentController {
     }
 
     @PostMapping
-    public ResponseEntity<?> saveStudent(@RequestBody @Valid Student student) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(studentService.save(student));
+    public ResponseEntity<StudentResponse> saveStudent(@RequestBody @Valid StudentRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(studentService.save(request));
     }
 
     @GetMapping
-    public ResponseEntity<?> findAllStudents() {
-        return ResponseEntity.status(HttpStatus.OK).body(studentService.findAllStudents());
+    public ResponseEntity<List<StudentResponse>> findAllStudents() {
+        return ResponseEntity.ok(studentService.findAllStudents());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> findStudentById(@PathVariable Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(studentService.findById(id));
+    public ResponseEntity<StudentResponse> findStudentById(@PathVariable Long id) {
+        return ResponseEntity.ok(studentService.findById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateStudent(@PathVariable Long id, @RequestBody @Valid Student student) {
-        return ResponseEntity.status(HttpStatus.OK).body(studentService.updateById(id, student));
+    public ResponseEntity<StudentResponse> updateStudent(@PathVariable Long id, @RequestBody @Valid StudentRequest request) {
+        return ResponseEntity.ok(studentService.updateById(id, request));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteStudent(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
         studentService.deleteStudentById(id);
         return ResponseEntity.noContent().build();
     }

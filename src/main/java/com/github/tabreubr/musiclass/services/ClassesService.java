@@ -1,6 +1,11 @@
 package com.github.tabreubr.musiclass.services;
 
+import com.github.tabreubr.musiclass.dto.classes.ClassesRequest;
+import com.github.tabreubr.musiclass.dto.classes.ClassesResponse;
+import com.github.tabreubr.musiclass.dto.classes.ClassesUpdateRequest;
 import com.github.tabreubr.musiclass.entities.Classes;
+import com.github.tabreubr.musiclass.entities.Instructor;
+import com.github.tabreubr.musiclass.entities.Student;
 import com.github.tabreubr.musiclass.exceptions.ResourceNotFoundException;
 import com.github.tabreubr.musiclass.repositories.ClassesRepository;
 import org.springframework.stereotype.Service;
@@ -11,35 +16,63 @@ import java.util.List;
 public class ClassesService {
 
     private final ClassesRepository classRepository;
+    private final StudentService studentService;
+    private final InstructorService instructorService;
 
-    public ClassesService(ClassesRepository classRepository) {
+    public ClassesService(ClassesRepository classRepository,
+                          StudentService studentService,
+                          InstructorService instructorService) {
         this.classRepository = classRepository;
+        this.studentService = studentService;
+        this.instructorService = instructorService;
     }
 
-    public Classes save(Classes classes) {
-        return classRepository.save(classes);
+    public ClassesResponse save(ClassesRequest request) {
+        Student student = studentService.findEntityById(request.studentId());
+        Instructor instructor = instructorService.findEntityById(request.instructorId());
+
+        Classes classes = new Classes();
+        classes.setDate(request.date());
+        classes.setObservations(request.observations());
+        classes.setPassed(request.passed());
+        classes.setStudent(student);
+        classes.setInstructor(instructor);
+
+        return ClassesResponse.from(classRepository.save(classes));
     }
 
-    public Classes findById(Long id) {
-        return classRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Class not found with id: " + id));
+    public ClassesResponse findById(Long id) {
+        return ClassesResponse.from(findEntityById(id));
     }
 
-    public List<Classes> findAllClasses() {
-        return classRepository.findAll();
+    public List<ClassesResponse> findAllClasses() {
+        return classRepository.findAll()
+                .stream()
+                .filter(c -> !Boolean.TRUE.equals(c.getPassed()))
+                .map(ClassesResponse::from)
+                .toList();
     }
 
-    public Classes updateById(Long id, Classes updatedData) {
-        Classes existing = findById(id);
-        if (updatedData.getPassed() != null)
-            existing.setPassed(updatedData.getPassed());
-        if(updatedData.getObservations() != null)
-            existing.setObservations(updatedData.getObservations());
-        return classRepository.save(existing);
+    public ClassesResponse updateById(Long id, ClassesUpdateRequest request) {
+        Classes existing = findEntityById(id);
+
+        if (request.passed() != null)
+            existing.setPassed(request.passed());
+        if(request.observations() != null)
+            existing.setObservations(request.observations());
+
+        return ClassesResponse.from(classRepository.save(existing));
     }
 
     public void deleteById(Long id) {
-        Classes existing = findById(id);
+        Classes existing = findEntityById(id);
         existing.setDeleted(true);
         classRepository.save(existing);
+    }
+
+    // Método interno - retorna entidade para uso entre services
+    public Classes findEntityById(Long id) {
+        return classRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Class with id: " + id));
     }
 }

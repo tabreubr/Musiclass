@@ -1,5 +1,8 @@
 package com.github.tabreubr.musiclass.controllers;
 
+import com.github.tabreubr.musiclass.dto.classes.ClassesRequest;
+import com.github.tabreubr.musiclass.dto.classes.ClassesResponse;
+import com.github.tabreubr.musiclass.dto.classes.ClassesUpdateRequest;
 import com.github.tabreubr.musiclass.entities.Classes;
 import com.github.tabreubr.musiclass.services.ClassesService;
 import com.github.tabreubr.musiclass.services.LessonService;
@@ -8,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RequestMapping("/classes")
@@ -24,27 +28,28 @@ public class ClassesController {
     }
 
     @PostMapping
-    public ResponseEntity<?> saveClass(@RequestBody @Valid Classes classes) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(classesService.save(classes));
+    public ResponseEntity<ClassesResponse> saveClass(@RequestBody @Valid ClassesRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(classesService.save(request));
     }
 
     @GetMapping
-    public ResponseEntity<?> findAllClasses() {
-        return ResponseEntity.status(HttpStatus.OK).body(classesService.findAllClasses());
+    public ResponseEntity<List<ClassesResponse>> findAllClasses() {
+        return ResponseEntity.ok(classesService.findAllClasses());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> findClassById(@PathVariable Long id){
-        return ResponseEntity.status(HttpStatus.OK).body(classesService.findById(id));
+    public ResponseEntity<ClassesResponse> findClassById(@PathVariable Long id){
+        return ResponseEntity.ok(classesService.findById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateClass(@PathVariable Long id, @RequestBody Classes classes) {
-        return ResponseEntity.status(HttpStatus.OK).body(classesService.updateById(id, classes));
+    public ResponseEntity<ClassesResponse> updateClass(@PathVariable Long id,
+                                                       @RequestBody ClassesUpdateRequest request) {
+        return ResponseEntity.ok(classesService.updateById(id, request));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteClass(@PathVariable Long id){
+    public ResponseEntity<Void> deleteClass(@PathVariable Long id){
         classesService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
