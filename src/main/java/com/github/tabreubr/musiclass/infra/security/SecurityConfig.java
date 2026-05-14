@@ -31,14 +31,6 @@ public class SecurityConfig {
                         .requestMatchers("/auth/login").permitAll()
                         .requestMatchers("/invites/*/register").permitAll()
                         .anyRequest().authenticated())
-                .exceptionHandling(e -> e
-                        .authenticationEntryPoint((resquest,
-                                                   response,
-                                                   authException) -> {
-                            response.setStatus(401);
-                            response.setContentType("application/json");
-                            response.getWriter().write("{\"error\": \"Invalid or missing token\"}");
-                        }))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

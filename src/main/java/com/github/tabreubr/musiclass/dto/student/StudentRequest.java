@@ -9,9 +9,6 @@ public record StudentRequest(
         String name,
 
         @NotNull(message = "Instrument is required")
-        Long instrumentId,
-
-        @NotNull(message = "Instructor id is required")
-        Long instructorId
+        Long instrumentId
 ) {
 }

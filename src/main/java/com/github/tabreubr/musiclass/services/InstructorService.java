@@ -6,6 +6,7 @@ import com.github.tabreubr.musiclass.dto.instructor.InstructorResponse;
 import com.github.tabreubr.musiclass.entities.Instructor;
 import com.github.tabreubr.musiclass.exceptions.ResourceNotFoundException;
 import com.github.tabreubr.musiclass.repositories.InstructorRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -70,5 +71,10 @@ public class InstructorService {
     public void deleteInstructorById(Long id) {
         findById(id);
         instructorRepository.deleteById(id);
+    }
+
+    public Instructor getAuthenticatedInstructor(){
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        return  findByEmail(email);
     }
 }

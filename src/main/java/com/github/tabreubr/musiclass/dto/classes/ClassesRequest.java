@@ -14,8 +14,6 @@ public record ClassesRequest(
         Boolean passed,
 
         @NotNull(message = "Student is required")
-        Long studentId,
-
-        @NotNull(message = "Instructor is required")
-        Long instructorId) {
+        Long studentId
+) {
 }

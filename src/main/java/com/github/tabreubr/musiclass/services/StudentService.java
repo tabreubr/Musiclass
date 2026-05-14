@@ -27,7 +27,7 @@ public class StudentService {
     }
 
     public StudentResponse save(StudentRequest request) {
-        Instructor instructor = instructorService.findEntityById(request.instructorId());
+        Instructor instructor = instructorService.getAuthenticatedInstructor();
         Instrument instrument = instrumentService.findById(request.instrumentId());
 
         Student student = new Student();
@@ -45,21 +45,19 @@ public class StudentService {
     }
 
     public List<StudentResponse> findAllStudents() {
-        return studentRepository.findAll()
+        Instructor instructor = instructorService.getAuthenticatedInstructor();
+        return studentRepository.findAllByInstructor(instructor)
                 .stream()
                 .map(StudentResponse::from)
                 .toList();
     }
 
     public StudentResponse updateById(Long id, StudentRequest request) {
-        findById(id);
 
-        Instructor instructor = instructorService.findEntityById(request.instructorId());
+        Student student = findEntityById(id);
         Instrument instrument = instrumentService.findById(request.instrumentId());
 
-        Student student = new Student();
         student.setName(request.name());
-        student.setInstructor(instructor);
         student.setInstrument(instrument);
 
         return StudentResponse.from(studentRepository.save(student));

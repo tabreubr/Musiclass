@@ -47,6 +47,16 @@ public class DataInitializer implements ApplicationRunner {
             instructorRepository.save(instructor);
             System.out.println("✅ Instrutor padrão criado: thiago@musiclass.com / 123456");
         }
+        if (instructorRepository.findByEmail("gui@musiclass.com").isEmpty()) {
+            Instructor instructor2 = new Instructor();
+            instructor2.setName("Guilherme Abreu");
+            instructor2.setEmail("gui@musiclass.com");
+            instructor2.setPassword(passwordEncoder.encode("123456"));
+            instructor2.setRole(UserRole.INSTRUCTOR);
+            instructorRepository.save(instructor2);
+            System.out.println("✅ Instrutor 2 criado: gui@musiclass.com / 123456");
+        }
+
     }
 
     private void seedInstruments() {

@@ -29,7 +29,7 @@ public class ClassesService {
 
     public ClassesResponse save(ClassesRequest request) {
         Student student = studentService.findEntityById(request.studentId());
-        Instructor instructor = instructorService.findEntityById(request.instructorId());
+        Instructor instructor = instructorService.getAuthenticatedInstructor();
 
         Classes classes = new Classes();
         classes.setDate(request.date());
@@ -46,9 +46,9 @@ public class ClassesService {
     }
 
     public List<ClassesResponse> findAllClasses() {
-        return classRepository.findAll()
+        Instructor instructor = instructorService.getAuthenticatedInstructor();
+        return classRepository.findAllByInstructorAndDeletedFalse(instructor)
                 .stream()
-                .filter(c -> !Boolean.TRUE.equals(c.getPassed()))
                 .map(ClassesResponse::from)
                 .toList();
     }
