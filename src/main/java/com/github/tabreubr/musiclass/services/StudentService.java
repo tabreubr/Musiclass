@@ -74,8 +74,12 @@ public class StudentService {
 
     public Student findEntityById(Long id) {
         return studentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Student with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Student not found with id: " + id));
     }
 
+    public Student findByEmail(String email) {
+        return studentRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Student not found with email: " + email));
+    }
 
 }

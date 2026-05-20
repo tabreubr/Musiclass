@@ -1,6 +1,7 @@
 package com.github.tabreubr.musiclass.infra.security;
 
 import com.github.tabreubr.musiclass.entities.Instructor;
+import com.github.tabreubr.musiclass.entities.Student;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -30,6 +31,18 @@ public class JwtUtil {
                 .claim("id", instructor.getId())
                 .claim("name", instructor.getName())
                 .claim("role", instructor.getRole().name())
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(getKey())
+                .compact();
+    }
+
+    public String generateTokenForStudent(Student student) {
+        return Jwts.builder()
+                .subject(student.getEmail())
+                .claim("id", student.getId())
+                .claim("name", student.getName())
+                .claim("role", "STUDENT")
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getKey())
