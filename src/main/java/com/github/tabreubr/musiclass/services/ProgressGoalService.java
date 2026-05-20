@@ -56,7 +56,7 @@ public class ProgressGoalService {
         Method method = methodRepository.findByName(methodName)
                 .orElseGet(() -> methodRepository.save(new Method(null, methodName)));
 
-        Student student = studentService.findById(((Number) body.get("studentId")).longValue());
+        Student student = studentService.findEntityById(((Number) body.get("studentId")).longValue());
 
         ProgressGoal goal = new ProgressGoal();
         goal.setMethod(method);

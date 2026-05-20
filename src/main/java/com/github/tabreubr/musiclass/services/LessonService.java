@@ -50,7 +50,7 @@ public class LessonService {
     }
 
     public Lesson addToClass(Long classId, Map<String, Object> body) {
-        Classes classes = classesService.findById(classId);
+        Classes classes = classesService.findEntityById(classId);
 
         String methodName = (String) body.get("methodName");
         Method method = methodRepository.findByName(methodName)
