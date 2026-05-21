@@ -8,6 +8,7 @@ import com.github.tabreubr.musiclass.entities.Instructor;
 import com.github.tabreubr.musiclass.entities.Student;
 import com.github.tabreubr.musiclass.exceptions.ResourceNotFoundException;
 import com.github.tabreubr.musiclass.repositories.ClassesRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,6 +49,15 @@ public class ClassesService {
     public List<ClassesResponse> findAllClasses() {
         Instructor instructor = instructorService.getAuthenticatedInstructor();
         return classRepository.findAllByInstructorAndDeletedFalse(instructor)
+                .stream()
+                .map(ClassesResponse::from)
+                .toList();
+    }
+
+    public List<ClassesResponse> findAllByAuthenticatedStudent() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Student student = studentService.findByEmail(email);
+        return classRepository.findAllByStudentAndDeletedFalse(student)
                 .stream()
                 .map(ClassesResponse::from)
                 .toList();
