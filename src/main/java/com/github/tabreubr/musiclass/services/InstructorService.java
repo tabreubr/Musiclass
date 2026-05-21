@@ -46,7 +46,7 @@ public class InstructorService {
     // Mantido com return de entidade para o AuthController conseguir verificar a senha e gerar o token
     // uso interno, nunca exposto diretamente
     public Instructor findByEmail(String email) {
-       return instructorRepository.findByEmail(email)
+        return instructorRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("Instructor not found with email: " + email));
     }
 
@@ -73,8 +73,8 @@ public class InstructorService {
         instructorRepository.deleteById(id);
     }
 
-    public Instructor getAuthenticatedInstructor(){
+    public Instructor getAuthenticatedInstructor() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        return  findByEmail(email);
+        return findByEmail(email);
     }
 }

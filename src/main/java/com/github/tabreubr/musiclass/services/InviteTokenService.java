@@ -6,6 +6,7 @@ import com.github.tabreubr.musiclass.entities.InviteToken;
 import com.github.tabreubr.musiclass.entities.Student;
 import com.github.tabreubr.musiclass.exceptions.ResourceNotFoundException;
 import com.github.tabreubr.musiclass.repositories.InviteTokenRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,8 @@ public class InviteTokenService {
     private final StudentService studentService;
     private final PasswordEncoder passwordEncoder;
 
-    private static final String FRONTEND_URL = "http://localhost:3000";
+    @Value("${app.frontend.url}")
+    private String frontendUrl;
 
     public InviteTokenService(InviteTokenRepository inviteTokenRepository,
                               StudentService studentService,
@@ -39,7 +41,7 @@ public class InviteTokenService {
 
         InviteToken saved = inviteTokenRepository.save(inviteToken);
 
-        String link = FRONTEND_URL + "/invite/" + saved.getToken();
+        String link = frontendUrl + "/invite/" + saved.getToken();
 
         return new InviteResponse(saved.getToken(), link, saved.getExpiresAt());
     }

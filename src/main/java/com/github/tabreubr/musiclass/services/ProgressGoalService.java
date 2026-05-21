@@ -1,5 +1,6 @@
 package com.github.tabreubr.musiclass.services;
 
+import com.github.tabreubr.musiclass.entities.Instructor;
 import com.github.tabreubr.musiclass.entities.Method;
 import com.github.tabreubr.musiclass.entities.ProgressGoal;
 import com.github.tabreubr.musiclass.entities.Student;
@@ -18,13 +19,16 @@ public class ProgressGoalService {
     private final ProgressGoalRepository progressGoalRepository;
     private final MethodRepository methodRepository;
     private final StudentService studentService;
+    private final InstructorService instructorService;
 
     public ProgressGoalService(ProgressGoalRepository progressGoalRepository,
                                MethodRepository methodRepository,
-                               StudentService studentService) {
+                               StudentService studentService,
+                               InstructorService instructorService) {
         this.progressGoalRepository = progressGoalRepository;
         this.methodRepository = methodRepository;
         this.studentService = studentService;
+        this.instructorService = instructorService;
     }
 
     public ProgressGoal save(ProgressGoal progressGoal) {
@@ -35,9 +39,9 @@ public class ProgressGoalService {
         return progressGoalRepository.findById(id).orElse(null);
     }
 
-    public List<ProgressGoal> findAllProgressGoals()
-    {
-        return progressGoalRepository.findAll();
+    public List<ProgressGoal> findAllProgressGoals() {
+        Instructor instructor = instructorService.getAuthenticatedInstructor();
+        return progressGoalRepository.findAllByStudentInstructor(instructor);
     }
 
     public ProgressGoal updateProgressGoalById(Long id, ProgressGoal progressGoal) {

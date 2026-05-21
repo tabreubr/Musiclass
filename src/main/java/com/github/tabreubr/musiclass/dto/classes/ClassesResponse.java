@@ -1,11 +1,9 @@
 package com.github.tabreubr.musiclass.dto.classes;
 
 import com.github.tabreubr.musiclass.dto.instructor.InstructorResponse;
-import com.github.tabreubr.musiclass.dto.student.StudentResponse;
 import com.github.tabreubr.musiclass.dto.student.StudentSummary;
 import com.github.tabreubr.musiclass.entities.Classes;
 import com.github.tabreubr.musiclass.entities.Lesson;
-import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 import java.util.List;
