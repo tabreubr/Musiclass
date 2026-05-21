@@ -21,7 +21,7 @@ public class InviteTokenService {
     private final StudentService studentService;
     private final PasswordEncoder passwordEncoder;
 
-    @Value("${app.frontend.url}")
+    @Value("${app.frontend-url}")
     private String frontendUrl;
 
     public InviteTokenService(InviteTokenRepository inviteTokenRepository,

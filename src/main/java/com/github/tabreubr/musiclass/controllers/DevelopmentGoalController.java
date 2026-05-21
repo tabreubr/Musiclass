@@ -42,4 +42,9 @@ public class DevelopmentGoalController {
 		developmentGoalService.deleteDevelopmentGoalById(id);
 		return ResponseEntity.noContent().build();
 	}
+
+	@PatchMapping("/{id}/complete")
+	public ResponseEntity<?> toggleDevelopmentGoal(@PathVariable Long id) {
+		return ResponseEntity.status(HttpStatus.OK).body(developmentGoalService.toggleCompleted(id));
+	}
 }

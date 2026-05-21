@@ -43,4 +43,10 @@ public class DevelopmentGoalService {
         findById(id);
         developmentGoalRepository.deleteById(id);
     }
+
+    public DevelopmentGoal toggleCompleted(Long id) {
+        DevelopmentGoal developmentGoal = findById(id);
+        developmentGoal.setCompleted(!Boolean.TRUE.equals(developmentGoal.getCompleted()));
+        return developmentGoalRepository.save(developmentGoal);
+    }
 }

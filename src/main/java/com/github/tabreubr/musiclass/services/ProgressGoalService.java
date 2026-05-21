@@ -71,4 +71,10 @@ public class ProgressGoalService {
 
         return progressGoalRepository.save(goal);
     }
+
+    public ProgressGoal toggleCompleted(Long id) {
+        ProgressGoal progressGoal = findById(id);
+        progressGoal.setCompleted(!Boolean.TRUE.equals(progressGoal.getCompleted()));
+        return progressGoalRepository.save(progressGoal);
+    }
 }

@@ -18,7 +18,6 @@ public class ProgressGoal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Future
     private LocalDate deadline;
     @NotNull
     private Integer targetLessonNumber;
@@ -26,4 +25,5 @@ public class ProgressGoal {
     private Student student;
     @ManyToOne
     private Method method;
+    private Boolean completed = false;
 }

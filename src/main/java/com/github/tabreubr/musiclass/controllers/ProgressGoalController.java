@@ -43,4 +43,9 @@ public class ProgressGoalController {
         progressGoalService.deleteProgressGoalById(id);
         return ResponseEntity.noContent().build();
     }
+
+	@PatchMapping("/{id}/complete")
+	public ResponseEntity<?> toggleProgressGoal(@PathVariable Long id) {
+		return ResponseEntity.status(HttpStatus.OK).body(progressGoalService.toggleCompleted(id));
+	}
 }
