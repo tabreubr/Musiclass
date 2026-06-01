@@ -2,6 +2,7 @@ package com.github.tabreubr.musiclass.services;
 
 import com.github.tabreubr.musiclass.entities.DevelopmentGoal;
 import com.github.tabreubr.musiclass.entities.Instructor;
+import com.github.tabreubr.musiclass.entities.Student;
 import com.github.tabreubr.musiclass.exceptions.ResourceNotFoundException;
 import com.github.tabreubr.musiclass.repositories.DevelopmentGoalRepository;
 import org.springframework.stereotype.Service;
@@ -48,5 +49,9 @@ public class DevelopmentGoalService {
         DevelopmentGoal developmentGoal = findById(id);
         developmentGoal.setCompleted(!Boolean.TRUE.equals(developmentGoal.getCompleted()));
         return developmentGoalRepository.save(developmentGoal);
+    }
+
+    public List<DevelopmentGoal> findAllByStudent(Student student) {
+        return developmentGoalRepository.findAllByStudent(student);
     }
 }

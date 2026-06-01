@@ -12,4 +12,5 @@ import java.util.List;
 public interface DevelopmentGoalRepository extends JpaRepository<DevelopmentGoal,Long> {
 
     List<DevelopmentGoal> findAllByStudentInstructor(Instructor instructor);
+    List<DevelopmentGoal> findAllByStudent(Student student);
 }

@@ -77,4 +77,8 @@ public class ProgressGoalService {
         progressGoal.setCompleted(!Boolean.TRUE.equals(progressGoal.getCompleted()));
         return progressGoalRepository.save(progressGoal);
     }
+
+    public List<ProgressGoal> findAllByStudent(Student student) {
+        return progressGoalRepository.findAllByStudent(student);
+    }
 }
