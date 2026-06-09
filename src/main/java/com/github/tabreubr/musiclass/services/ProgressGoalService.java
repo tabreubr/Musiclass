@@ -4,6 +4,7 @@ import com.github.tabreubr.musiclass.entities.Instructor;
 import com.github.tabreubr.musiclass.entities.Method;
 import com.github.tabreubr.musiclass.entities.ProgressGoal;
 import com.github.tabreubr.musiclass.entities.Student;
+import com.github.tabreubr.musiclass.exceptions.ResourceNotFoundException;
 import com.github.tabreubr.musiclass.repositories.MethodRepository;
 import com.github.tabreubr.musiclass.repositories.ProgressGoalRepository;
 import org.springframework.stereotype.Service;
@@ -36,7 +37,7 @@ public class ProgressGoalService {
     }
 
     public ProgressGoal findById(Long id) {
-        return progressGoalRepository.findById(id).orElse(null);
+        return progressGoalRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Progress Goal not found with id: " + id));
     }
 
     public List<ProgressGoal> findAllProgressGoals() {

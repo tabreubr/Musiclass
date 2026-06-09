@@ -31,7 +31,9 @@ public class SecurityConfig {
                         .requestMatchers("/auth/login", "/auth/student/login").permitAll()
                         .requestMatchers("/invites/*/register").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
-                        .anyRequest().authenticated())
+                        .requestMatchers("/student/**").hasRole("STUDENT")
+                        .requestMatchers("/invites/student/**").hasRole("INSTRUCTOR")
+                        .anyRequest().hasAnyRole("INSTRUCTOR", "ADMIN"))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

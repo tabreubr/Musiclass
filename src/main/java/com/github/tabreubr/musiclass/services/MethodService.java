@@ -2,6 +2,7 @@ package com.github.tabreubr.musiclass.services;
 
 import com.github.tabreubr.musiclass.entities.Instructor;
 import com.github.tabreubr.musiclass.entities.Method;
+import com.github.tabreubr.musiclass.exceptions.ResourceNotFoundException;
 import com.github.tabreubr.musiclass.repositories.MethodRepository;
 import org.springframework.stereotype.Service;
 
@@ -21,11 +22,11 @@ public class MethodService {
     }
 
     public Method findById(Long id) {
-        return methodRepository.findById(id).orElseThrow(() -> new RuntimeException("Method not found with id: " + id));
+        return methodRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Method not found with id: " + id));
     }
 
     public Method findByName(String name) {
-        return methodRepository.findByName(name).orElseThrow(() -> new RuntimeException("Method not found with name: " + name));
+        return methodRepository.findByName(name).orElseThrow(() -> new ResourceNotFoundException("Method not found with name: " + name));
     }
 
     public List<Method> findAllMethods() {
