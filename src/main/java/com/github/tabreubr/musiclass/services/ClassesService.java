@@ -46,6 +46,16 @@ public class ClassesService {
         return ClassesResponse.from(findEntityById(id));
     }
 
+    public ClassesResponse findByIdForStudent(Long id) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Student student = studentService.findByEmail(email);
+        Classes classes = findEntityById(id);
+        if(!classes.getStudent().getId().equals(student.getId())) {
+            throw new ResourceNotFoundException("Class not found with id: " + id);
+        }
+        return ClassesResponse.from(classes);
+    }
+
     public List<ClassesResponse> findAllClasses() {
         Instructor instructor = instructorService.getAuthenticatedInstructor();
         return classRepository.findAllByInstructorAndDeletedFalse(instructor)

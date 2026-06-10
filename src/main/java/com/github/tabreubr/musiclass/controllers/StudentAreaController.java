@@ -9,6 +9,7 @@ import com.github.tabreubr.musiclass.services.StudentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -47,5 +48,10 @@ public class StudentAreaController {
                 "developmentGoals", developmentGoalService.findAllByStudent(student),
                 "progressGoals", progressGoalService.findAllByStudent(student)
         ));
+    }
+
+    @GetMapping("/classes/{id}")
+    public ResponseEntity<ClassesResponse> getMyClassById(@PathVariable Long id) {
+        return ResponseEntity.ok(classesService.findByIdForStudent(id));
     }
 }
