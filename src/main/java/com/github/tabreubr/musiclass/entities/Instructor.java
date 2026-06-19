@@ -1,5 +1,6 @@
 package com.github.tabreubr.musiclass.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.tabreubr.musiclass.enums.UserRole;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -19,6 +20,7 @@ public class Instructor {
     private String name;
     @Column(nullable = true)
     private String email;
+    @JsonIgnore
     @Column(nullable = true)
     private String password;
     @Column(nullable = false)

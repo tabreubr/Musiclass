@@ -1,5 +1,6 @@
 package com.github.tabreubr.musiclass.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -31,6 +32,8 @@ public class Student {
     // campos nulos até o aluno aceitar o convite
     @Column(nullable = true, unique = true)
     private String email;
+
+    @JsonIgnore
     @Column(nullable = true)
     private String password;
 

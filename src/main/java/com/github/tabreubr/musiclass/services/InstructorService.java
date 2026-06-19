@@ -77,4 +77,16 @@ public class InstructorService {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return findByEmail(email);
     }
+
+    public InstructorResponse getAuthenticatedInstructorResponse() {
+        return InstructorResponse.from(getAuthenticatedInstructor());
+    }
+
+    public InstructorResponse updateAuthenticatedInstructor(InstructorRequest request) {
+        Instructor instructor = getAuthenticatedInstructor();
+        instructor.setName(request.name());
+        instructor.setEmail(request.email());
+        instructor.setPassword(passwordEncoder.encode(request.password()));
+        return InstructorResponse.from(instructorRepository.save(instructor));
+    }
 }

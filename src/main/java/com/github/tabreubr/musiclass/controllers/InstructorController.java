@@ -47,4 +47,14 @@ public class InstructorController {
         instructorService.deleteInstructorById(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/me")
+    public ResponseEntity<InstructorResponse> getMe() {
+        return ResponseEntity.ok(instructorService.getAuthenticatedInstructorResponse());
+    }
+
+    @PutMapping("/me")
+    public ResponseEntity<InstructorResponse> updateMe(@RequestBody @Valid InstructorRequest request) {
+        return ResponseEntity.ok(instructorService.updateAuthenticatedInstructor(request));
+    }
 }

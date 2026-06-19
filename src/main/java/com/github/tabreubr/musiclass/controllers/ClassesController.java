@@ -3,7 +3,8 @@ package com.github.tabreubr.musiclass.controllers;
 import com.github.tabreubr.musiclass.dto.classes.ClassesRequest;
 import com.github.tabreubr.musiclass.dto.classes.ClassesResponse;
 import com.github.tabreubr.musiclass.dto.classes.ClassesUpdateRequest;
-import com.github.tabreubr.musiclass.entities.Classes;
+import com.github.tabreubr.musiclass.dto.lesson.LessonRequest;
+import com.github.tabreubr.musiclass.dto.lesson.LessonResponse;
 import com.github.tabreubr.musiclass.services.ClassesService;
 import com.github.tabreubr.musiclass.services.LessonService;
 import jakarta.validation.Valid;
@@ -38,7 +39,7 @@ public class ClassesController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ClassesResponse> findClassById(@PathVariable Long id){
+    public ResponseEntity<ClassesResponse> findClassById(@PathVariable Long id) {
         return ResponseEntity.ok(classesService.findById(id));
     }
 
@@ -49,28 +50,27 @@ public class ClassesController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteClass(@PathVariable Long id){
+    public ResponseEntity<Void> deleteClass(@PathVariable Long id) {
         classesService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{id}/lessons")
-    public ResponseEntity<?> addLesson(@PathVariable Long id,
-                                       @RequestBody Map<String, Object> body) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(lessonService.addToClass(id, body));
+    public ResponseEntity<LessonResponse> addLesson(@PathVariable Long id,
+                                                    @RequestBody @Valid LessonRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(lessonService.addToClass(id, request));
     }
 
     @PatchMapping("/{id}/lessons/{lessonId}")
-    public ResponseEntity<?> updateLesson(@PathVariable Long id,
-                                          @PathVariable Long lessonId,
-                                          @RequestBody Map<String, Boolean> body) {
+    public ResponseEntity<LessonResponse> updateLesson(@PathVariable Long id,
+                                                       @PathVariable Long lessonId,
+                                                       @RequestBody Map<String, Boolean> body) {
         return ResponseEntity.ok(lessonService.updateCompleted(lessonId, body.get("completed")));
     }
 
     @DeleteMapping("/{id}/lessons/{lessonId}")
-    public ResponseEntity<?> deleteLesson(@PathVariable Long id,
-                                          @PathVariable Long lessonId) {
+    public ResponseEntity<Void> deleteLesson(@PathVariable Long id,
+                                             @PathVariable Long lessonId) {
         lessonService.deleteLessonById(lessonId);
         return ResponseEntity.noContent().build();
     }

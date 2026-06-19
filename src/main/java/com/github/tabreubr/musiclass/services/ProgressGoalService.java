@@ -1,5 +1,7 @@
 package com.github.tabreubr.musiclass.services;
 
+import com.github.tabreubr.musiclass.dto.progressGoal.ProgressGoalRequest;
+import com.github.tabreubr.musiclass.dto.progressGoal.ProgressGoalResponse;
 import com.github.tabreubr.musiclass.entities.Instructor;
 import com.github.tabreubr.musiclass.entities.Method;
 import com.github.tabreubr.musiclass.entities.ProgressGoal;
@@ -9,9 +11,7 @@ import com.github.tabreubr.musiclass.repositories.MethodRepository;
 import com.github.tabreubr.musiclass.repositories.ProgressGoalRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 
 @Service
@@ -32,54 +32,64 @@ public class ProgressGoalService {
         this.instructorService = instructorService;
     }
 
-    public ProgressGoal save(ProgressGoal progressGoal) {
-        return progressGoalRepository.save(progressGoal);
-    }
-
-    public ProgressGoal findById(Long id) {
-        return progressGoalRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Progress Goal not found with id: " + id));
-    }
-
-    public List<ProgressGoal> findAllProgressGoals() {
+    public ProgressGoalResponse save(ProgressGoalRequest request) {
         Instructor instructor = instructorService.getAuthenticatedInstructor();
-        return progressGoalRepository.findAllByStudentInstructor(instructor);
+        Student student = studentService.findEntityById(request.studentId());
+        if (!student.getInstructor().getId().equals(instructor.getId())) {
+            throw new ResourceNotFoundException("Student not found with id: " + request.studentId());
+        }
+        Method method = methodRepository.findByName(request.methodName())
+                .orElseGet(() -> methodRepository.save(new Method(null, request.methodName())));
+        ProgressGoal goal = new ProgressGoal();
+        goal.setStudent(student);
+        goal.setMethod(method);
+        goal.setTargetLessonNumber(request.targetLessonNumber());
+        goal.setDeadline(request.deadline());
+        return ProgressGoalResponse.from(progressGoalRepository.save(goal));
     }
 
-    public ProgressGoal updateProgressGoalById(Long id, ProgressGoal progressGoal) {
-        findById(id);
-        progressGoal.setId(id);
-        return progressGoalRepository.save(progressGoal);
+    public ProgressGoalResponse findByIdValidated(Long id) {
+        return ProgressGoalResponse.from(findAndValidateOwnership(id));
+    }
+
+    public List<ProgressGoalResponse> findAllProgressGoals() {
+        Instructor instructor = instructorService.getAuthenticatedInstructor();
+        return progressGoalRepository.findAllByStudentInstructor(instructor)
+                .stream().map(ProgressGoalResponse::from).toList();
+    }
+
+    public ProgressGoalResponse updateProgressGoalById(Long id, ProgressGoalRequest request) {
+        ProgressGoal goal = findAndValidateOwnership(id);
+        Method method = methodRepository.findByName(request.methodName())
+                .orElseGet(() -> methodRepository.save(new Method(null, request.methodName())));
+        goal.setMethod(method);
+        goal.setTargetLessonNumber(request.targetLessonNumber());
+        goal.setDeadline(request.deadline());
+        return ProgressGoalResponse.from(progressGoalRepository.save(goal));
     }
 
     public void deleteProgressGoalById(Long id) {
-        findById(id);
-        progressGoalRepository.deleteById(id);
+        progressGoalRepository.deleteById(findAndValidateOwnership(id).getId());
     }
 
-    public ProgressGoal saveFromBody(Map<String, Object> body) {
-        String methodName = (String) body.get("methodName");
-        Method method = methodRepository.findByName(methodName)
-                .orElseGet(() -> methodRepository.save(new Method(null, methodName)));
-
-        Student student = studentService.findEntityById(((Number) body.get("studentId")).longValue());
-
-        ProgressGoal goal = new ProgressGoal();
-        goal.setMethod(method);
-        goal.setStudent(student);
-        goal.setTargetLessonNumber(((Number) body.get("targetLessonNumber")).intValue());
-        if (body.get("deadline") != null)
-            goal.setDeadline(LocalDate.parse((String) body.get("deadline")));
-
-        return progressGoalRepository.save(goal);
+    public ProgressGoalResponse toggleCompleted(Long id) {
+        ProgressGoal goal = findAndValidateOwnership(id);
+        goal.setCompleted(!Boolean.TRUE.equals(goal.getCompleted()));
+        return ProgressGoalResponse.from(progressGoalRepository.save(goal));
     }
 
-    public ProgressGoal toggleCompleted(Long id) {
-        ProgressGoal progressGoal = findById(id);
-        progressGoal.setCompleted(!Boolean.TRUE.equals(progressGoal.getCompleted()));
-        return progressGoalRepository.save(progressGoal);
+    public List<ProgressGoalResponse> findAllByStudent(Student student) {
+        return progressGoalRepository.findAllByStudent(student)
+                .stream().map(ProgressGoalResponse::from).toList();
     }
 
-    public List<ProgressGoal> findAllByStudent(Student student) {
-        return progressGoalRepository.findAllByStudent(student);
+    private ProgressGoal findAndValidateOwnership(Long id) {
+        Instructor instructor = instructorService.getAuthenticatedInstructor();
+        ProgressGoal goal = progressGoalRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Progress Goal not found with id: " + id));
+        if (!goal.getStudent().getInstructor().getId().equals(instructor.getId())) {
+            throw new ResourceNotFoundException("Progress Goal not found with id: " + id);
+        }
+        return goal;
     }
 }
