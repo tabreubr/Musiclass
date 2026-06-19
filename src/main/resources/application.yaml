@@ -23,3 +23,8 @@ jwt:
   expiration: ${JWT_EXPIRATION:86400000}
 app:
   frontend-url: ${FRONTEND_URL:http://localhost:3000}
+springdoc:
+  swagger-ui:
+    enabled: false
+  api-docs:
+    enabled: false

@@ -1,6 +1,7 @@
 package com.github.tabreubr.musiclass.controllers;
 
 import com.github.tabreubr.musiclass.dto.classes.ClassesResponse;
+import com.github.tabreubr.musiclass.dto.student.StudentGoalsResponse;
 import com.github.tabreubr.musiclass.entities.Student;
 import com.github.tabreubr.musiclass.services.ClassesService;
 import com.github.tabreubr.musiclass.services.DevelopmentGoalService;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/student")
@@ -41,12 +41,12 @@ public class StudentAreaController {
     }
 
     @GetMapping("/goals")
-    public ResponseEntity<?> getMyGoals() {
+    public ResponseEntity<StudentGoalsResponse> getMyGoals() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Student student = studentService.findByEmail(email);
-        return ResponseEntity.ok(Map.of(
-                "developmentGoals", developmentGoalService.findAllByStudent(student),
-                "progressGoals", progressGoalService.findAllByStudent(student)
+        return ResponseEntity.ok(new StudentGoalsResponse(
+                developmentGoalService.findAllByStudent(student),
+                progressGoalService.findAllByStudent(student)
         ));
     }
 
