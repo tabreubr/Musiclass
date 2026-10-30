@@ -39,9 +39,7 @@ public class StudentService {
     }
 
     public StudentResponse findById(Long id) {
-        Student student = studentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Student with id: " + id));
-        return StudentResponse.from(student);
+        return StudentResponse.from(findOwnedEntity(id));
     }
 
     public List<StudentResponse> findAllStudents() {
@@ -54,7 +52,7 @@ public class StudentService {
 
     public StudentResponse updateById(Long id, StudentRequest request) {
 
-        Student student = findEntityById(id);
+        Student student = findOwnedEntity(id);
         Instrument instrument = instrumentService.findById(request.instrumentId());
 
         student.setName(request.name());
@@ -64,12 +62,19 @@ public class StudentService {
     }
 
     public void deleteStudentById(Long id) {
-        findById(id);
-        studentRepository.deleteById(id);
+        studentRepository.delete(findOwnedEntity(id));
     }
 
     public Student saveEntity(Student student) {
         return studentRepository.save(student);
+    }
+
+    // Busca o aluno somente entre os alunos do instrutor autenticado.
+    // Aluno de outro instrutor gera 404, sem revelar que o id existe.
+    public Student findOwnedEntity(Long id) {
+        Instructor instructor = instructorService.getAuthenticatedInstructor();
+        return studentRepository.findByIdAndInstructor(id, instructor)
+                .orElseThrow(() -> new ResourceNotFoundException("Student not found with id: " + id));
     }
 
     public Student findEntityById(Long id) {

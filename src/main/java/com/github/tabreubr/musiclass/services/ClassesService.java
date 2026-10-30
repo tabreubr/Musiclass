@@ -29,7 +29,7 @@ public class ClassesService {
     }
 
     public ClassesResponse save(ClassesRequest request) {
-        Student student = studentService.findEntityById(request.studentId());
+        Student student = studentService.findOwnedEntity(request.studentId());
         Instructor instructor = instructorService.getAuthenticatedInstructor();
 
         Classes classes = new Classes();
@@ -43,7 +43,7 @@ public class ClassesService {
     }
 
     public ClassesResponse findById(Long id) {
-        return ClassesResponse.from(findEntityById(id));
+        return ClassesResponse.from(findOwnedEntity(id));
     }
 
     public ClassesResponse findByIdForStudent(Long id) {
@@ -74,7 +74,7 @@ public class ClassesService {
     }
 
     public ClassesResponse updateById(Long id, ClassesUpdateRequest request) {
-        Classes existing = findEntityById(id);
+        Classes existing = findOwnedEntity(id);
 
         if (request.passed() != null)
             existing.setPassed(request.passed());
@@ -85,9 +85,17 @@ public class ClassesService {
     }
 
     public void deleteById(Long id) {
-        Classes existing = findEntityById(id);
+        Classes existing = findOwnedEntity(id);
         existing.setDeleted(true);
         classRepository.save(existing);
+    }
+
+    // Busca a aula somente entre as aulas do instrutor autenticado.
+    // Aula de outro instrutor gera 404, sem revelar que o id existe.
+    private Classes findOwnedEntity(Long id) {
+        Instructor instructor = instructorService.getAuthenticatedInstructor();
+        return classRepository.findByIdAndInstructor(id, instructor)
+                .orElseThrow(() -> new ResourceNotFoundException("Class not found with id: " + id));
     }
 
     // Método interno - retorna entidade para uso entre services
