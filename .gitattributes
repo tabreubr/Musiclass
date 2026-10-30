@@ -1,2 +1,14 @@
+# Normaliza finais de linha: o repositório guarda LF; cada sistema faz o checkout
+# no formato nativo (CRLF no Windows, LF no Linux/macOS).
+* text=auto
+
+# Scripts precisam do final de linha do sistema em que rodam.
 /mvnw text eol=lf
+*.sh text eol=lf
 *.cmd text eol=crlf
+*.bat text eol=crlf
+
+# Binários: nunca converter.
+*.jar binary
+*.png binary
+*.jpg binary
