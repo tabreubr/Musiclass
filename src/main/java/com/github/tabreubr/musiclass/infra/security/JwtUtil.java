@@ -15,14 +15,20 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    @Value("${jwt.secret}")
-    private String secret;
+    // HS256 exige uma chave de pelo menos 256 bits (32 bytes).
+    static final int MIN_SECRET_BYTES = 32;
 
-    @Value("${jwt.expiration}")
-    private Long expiration;
+    private final SecretKey key;
+    private final long expiration;
 
-    private SecretKey getKey() {
-        return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+    public JwtUtil(@Value("${jwt.secret}") String secret,
+                   @Value("${jwt.expiration}") long expiration) {
+        if (secret == null || secret.getBytes(StandardCharsets.UTF_8).length < MIN_SECRET_BYTES) {
+            throw new IllegalStateException(
+                    "jwt.secret must have at least " + MIN_SECRET_BYTES + " bytes. Set the JWT_SECRET environment variable.");
+        }
+        this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        this.expiration = expiration;
     }
 
     public String generateToken(Instructor instructor) {
@@ -33,7 +39,7 @@ public class JwtUtil {
                 .claim("role", instructor.getRole().name())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(getKey())
+                .signWith(key)
                 .compact();
     }
 
@@ -45,13 +51,13 @@ public class JwtUtil {
                 .claim("role", "STUDENT")
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(getKey())
+                .signWith(key)
                 .compact();
     }
 
     public Claims extractClaims(String token) {
-        return  Jwts.parser()
-                .verifyWith(getKey())
+        return Jwts.parser()
+                .verifyWith(key)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();

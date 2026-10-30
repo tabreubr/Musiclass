@@ -1,0 +1,8 @@
+# Perfil usado pelos testes (@ActiveProfiles("test")).
+# O banco vem do Testcontainers via @ServiceConnection (URL, usuário e senha do
+# container substituem os valores abaixo); a seed de dev não roda.
+spring:
+  datasource:
+    password: provided-by-testcontainers
+jwt:
+  secret: test-only-jwt-secret-for-automated-tests
