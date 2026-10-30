@@ -4,7 +4,6 @@ import com.github.tabreubr.musiclass.dto.instructor.InstructorRequest;
 import com.github.tabreubr.musiclass.entities.Instructor;
 import com.github.tabreubr.musiclass.entities.Student;
 import com.github.tabreubr.musiclass.enums.UserRole;
-import com.github.tabreubr.musiclass.exceptions.ResourceNotFoundException;
 import com.github.tabreubr.musiclass.infra.security.JwtUtil;
 import com.github.tabreubr.musiclass.services.InstructorService;
 import com.github.tabreubr.musiclass.services.StudentService;
@@ -39,13 +38,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<LoginResponse> register(@Valid @RequestBody RegisterRequest registerRequest) {
-        try {
-            instructorService.findByEmail(registerRequest.email());
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already in use");
-        } catch (ResourceNotFoundException ignored) {
-            // Email not found, can proceed with registration
-        }
-
+        // InstructorService.save rejeita e-mail já cadastrado com 409 (ResourceAlreadyExistsException)
         instructorService.save(new InstructorRequest(
                 registerRequest.name(), registerRequest.email(), registerRequest.password(), UserRole.INSTRUCTOR
         ));
