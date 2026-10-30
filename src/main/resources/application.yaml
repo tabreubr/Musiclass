@@ -10,7 +10,9 @@ spring:
     name: musiclass
   jpa:
     hibernate:
-      ddl-auto: update
+      # O schema é criado e versionado pelo Flyway (src/main/resources/db/migration).
+      # O Hibernate só confere se as entidades batem com as tabelas.
+      ddl-auto: validate
     show-sql: true
     properties:
       hibernate:
