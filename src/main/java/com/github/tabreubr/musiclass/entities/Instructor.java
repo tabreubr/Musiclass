@@ -18,7 +18,7 @@ public class Instructor {
     private Long id;
     @NotBlank
     private String name;
-    @Column(nullable = true)
+    @Column(nullable = false, unique = true)
     private String email;
     @JsonIgnore
     @Column(nullable = true)
