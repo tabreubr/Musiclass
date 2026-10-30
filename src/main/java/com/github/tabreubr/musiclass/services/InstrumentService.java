@@ -1,6 +1,7 @@
 package com.github.tabreubr.musiclass.services;
 
 import com.github.tabreubr.musiclass.entities.Instrument;
+import com.github.tabreubr.musiclass.exceptions.ResourceAlreadyExistsException;
 import com.github.tabreubr.musiclass.exceptions.ResourceNotFoundException;
 import com.github.tabreubr.musiclass.repositories.InstrumentRepository;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,9 @@ public class InstrumentService {
     }
 
     public Instrument save(Instrument instrument) {
+        if (instrumentRepository.existsByName(instrument.getName())) {
+            throw new ResourceAlreadyExistsException("Instrument already exists with name: " + instrument.getName());
+        }
         return instrumentRepository.save(instrument);
     }
 
