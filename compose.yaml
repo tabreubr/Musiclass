@@ -1,16 +1,31 @@
+# Infraestrutura local de desenvolvimento.
+#   docker compose up -d                   -> sobe só o PostgreSQL
+#   docker compose --profile tools up -d   -> sobe também o pgAdmin web (http://localhost:5433)
+# Os valores padrão abaixo são apenas para a máquina local; para trocá-los,
+# crie um arquivo .env (ignorado pelo git) com as variáveis.
 services:
   postgres:
-    image: 'postgres:latest'
+    # Mesma versão principal usada nos testes (Testcontainers: postgres:16-alpine).
+    image: 'postgres:16'
     environment:
-      - 'POSTGRES_DB=musiclass'
-      - 'POSTGRES_PASSWORD=mypassword'
-      - 'POSTGRES_USER=postgres'
+      POSTGRES_DB: musiclass
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-mypassword}
     ports:
       - '5432:5432'
+    volumes:
+      - musiclass-db-data:/var/lib/postgresql/data
+
   pgadmin:
     image: 'dpage/pgadmin4:latest'
+    profiles: ['tools']
     environment:
-      - 'PGADMIN_DEFAULT_EMAIL=thiagolabreu.br@gmail.com'
-      - 'PGADMIN_DEFAULT_PASSWORD=admin'
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@example.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
     ports:
       - '5433:80'
+    depends_on:
+      - postgres
+
+volumes:
+  musiclass-db-data:
