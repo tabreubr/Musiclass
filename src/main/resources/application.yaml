@@ -1,8 +1,12 @@
+# Configuração base (vale para todos os ambientes).
+# Não há valores padrão para segredos: se JWT_SECRET ou SPRING_DATASOURCE_PASSWORD
+# faltarem, a aplicação não sobe (fail fast). Os valores de desenvolvimento ficam
+# em application-dev.yaml, ativado com SPRING_PROFILES_ACTIVE=dev.
 spring:
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/musiclass}
     username: ${SPRING_DATASOURCE_USERNAME:postgres}
-    password: ${SPRING_DATASOURCE_PASSWORD:mypassword}
+    password: ${SPRING_DATASOURCE_PASSWORD}
   docker:
     compose:
       enabled: ${DOCKER_COMPOSE_ENABLED:false}
@@ -13,15 +17,12 @@ spring:
       # O schema é criado e versionado pelo Flyway (src/main/resources/db/migration).
       # O Hibernate só confere se as entidades batem com as tabelas.
       ddl-auto: validate
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
+    show-sql: false
   sql:
     init:
       mode: never
 jwt:
-  secret: ${JWT_SECRET:musiclass-super-secret-key-2024-change-this-in-production}
+  secret: ${JWT_SECRET}
   expiration: ${JWT_EXPIRATION:86400000}
 app:
   frontend-url: ${FRONTEND_URL:http://localhost:3000}

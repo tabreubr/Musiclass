@@ -1,0 +1,17 @@
+# Perfil de desenvolvimento local. Ative com SPRING_PROFILES_ACTIVE=dev.
+# Os valores abaixo são públicos e servem apenas para a máquina do desenvolvedor:
+# nunca use este perfil em um ambiente exposto.
+spring:
+  datasource:
+    password: ${SPRING_DATASOURCE_PASSWORD:mypassword}
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+jwt:
+  secret: ${JWT_SECRET:dev-only-jwt-secret-do-not-use-outside-localhost}
+app:
+  seed:
+    # Senha dos instrutores criados pelo DataInitializer (só roda no perfil dev).
+    instructor-password: ${SEED_INSTRUCTOR_PASSWORD:123456}

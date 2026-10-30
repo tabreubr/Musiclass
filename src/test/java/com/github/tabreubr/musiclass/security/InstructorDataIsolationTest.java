@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.io.IOException;
 import java.net.URI;
@@ -33,6 +34,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Import(TestcontainersConfiguration.class)
+@ActiveProfiles("test")
 class InstructorDataIsolationTest {
 
     private final HttpClient http = HttpClient.newHttpClient();
@@ -50,7 +52,7 @@ class InstructorDataIsolationTest {
         tokenA = registerInstructor("Instrutor A");
         tokenB = registerInstructor("Instrutor B");
 
-        long instrumentId = firstInstrumentId(tokenB);
+        long instrumentId = createInstrument(tokenB);
         studentOfB = createStudent(tokenB, "Aluno do B", instrumentId);
         classOfB = createClass(tokenB, studentOfB);
     }
@@ -123,7 +125,7 @@ class InstructorDataIsolationTest {
         @Test
         @DisplayName("S2: outro instrutor não consegue alterar o aluno")
         void otherInstructorCannotUpdateStudent() throws Exception {
-            long instrumentId = firstInstrumentId(tokenA);
+            long instrumentId = createInstrument(tokenA);
             var response = send("PUT", "/students/" + studentOfB, tokenA, """
                     {"name": "renomeado pelo instrutor A", "instrumentId": %d}
                     """.formatted(instrumentId));
@@ -154,11 +156,13 @@ class InstructorDataIsolationTest {
         return JsonPath.read(response.body(), "$.token");
     }
 
-    /** Usa um dos instrumentos criados pelo DataInitializer. */
-    private long firstInstrumentId(String token) throws Exception {
-        var response = send("GET", "/instruments", token, null);
-        assertThat(response.statusCode()).isEqualTo(200);
-        Number id = JsonPath.read(response.body(), "$[0].id");
+    /** Cada teste cria os próprios dados: a seed de dev não roda no perfil "test". */
+    private long createInstrument(String token) throws Exception {
+        var response = send("POST", "/instruments", token, """
+                {"name": "Instrumento %s"}
+                """.formatted(UUID.randomUUID()));
+        assertThat(response.statusCode()).as("criação do instrumento").isEqualTo(201);
+        Number id = JsonPath.read(response.body(), "$.id");
         return id.longValue();
     }
 
