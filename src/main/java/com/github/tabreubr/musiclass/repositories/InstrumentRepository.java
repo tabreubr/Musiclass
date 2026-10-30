@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface InstrumentRepository extends JpaRepository<Instrument,Long> {
     Optional<Instrument> findByName(String name);
+
+    Boolean existsByName(String name);
 }

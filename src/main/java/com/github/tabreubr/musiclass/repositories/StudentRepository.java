@@ -13,4 +13,5 @@ public interface StudentRepository extends JpaRepository<Student,Long> {
 
     List<Student> findAllByInstructor(Instructor instructor);
     Optional<Student> findByEmail(String email);
+    Optional<Student> findByIdAndInstructor(Long id, Instructor instructor);
 }
