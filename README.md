@@ -41,7 +41,8 @@ execução.
 O perfil `dev` traz valores **apenas para a máquina local** (senha do banco,
 segredo JWT) e cria dois instrutores de exemplo (`thiago@musiclass.com` e
 `gui@musiclass.com`) com a senha definida em `SEED_INSTRUCTOR_PASSWORD`
-(padrão `123456`). Para obter um token:
+(padrão `123456`). Para obter um token (exemplo em bash/Git Bash; no Windows,
+use o Postman ou outro cliente HTTP com o mesmo corpo JSON):
 
 ```bash
 curl -X POST http://localhost:8080/auth/login \
