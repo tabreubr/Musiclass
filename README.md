@@ -32,8 +32,14 @@ Pré-requisitos: JDK 21 e Docker.
    ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
    ```
 
-   No Windows (PowerShell), use `.\mvnw.cmd` no lugar de `./mvnw`. Pela IDE,
-   rode `MusiclassApplication` com o perfil ativo `dev`.
+   No Windows (PowerShell), use `.\mvnw.cmd` e coloque o `-D...` entre aspas
+   (sem elas, o PowerShell quebra o argumento no ponto):
+
+   ```powershell
+   .\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=dev"
+   ```
+
+   Pela IDE, rode `MusiclassApplication` com o perfil ativo `dev`.
 
 A API sobe em `http://localhost:8080`. O Flyway cria as tabelas na primeira
 execução.
